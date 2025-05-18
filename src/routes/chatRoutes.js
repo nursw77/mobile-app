@@ -12,8 +12,9 @@ router.post("/chat", async (req, res) => {
 
   try {
     const aiReply = await getAIResponse(message);
-    res.json({ reply: aiReply });
+    res.json({ response: aiReply }); // <-- changed here
   } catch (error) {
+    console.error("AI service error:", error);
     res.status(500).json({ error: "AI service failed" });
   }
 });
