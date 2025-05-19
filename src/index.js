@@ -6,6 +6,7 @@ import authRoutes from "./routes/authRoutes.js";
 import bookRoutes from "./routes/bookRoutes.js";
 import { connectDB } from "./lib/db.js";
 import chatRoutes from "./routes/chatRoutes.js";
+import bookExtras from "./routes/bookActions.js";
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(cors());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/books", bookRoutes);
+app.use("/api/books", bookExtras); // добавь этот маршрут 👈
 
 // ai state
 app.use("/api", chatRoutes);
