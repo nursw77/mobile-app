@@ -35,13 +35,6 @@ const bookSchema = new mongoose.Schema(
         ref: "User",
       },
     ],
-
-    saves: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
   },
   { timestamps: true }
 );

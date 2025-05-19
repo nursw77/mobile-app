@@ -7,6 +7,27 @@ import protectRoute from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
+// GET Single Book
+router.get("/:id", protectRoute, async (req, res) => {
+  console.log("Request for book ID:", req.params.id);
+  try {
+    const book = await Book.findById(req.params.id)
+      .populate("user", "username profileImage")
+      .populate("likes", "username");
+
+    if (!book) {
+      console.log("Book not found");
+      return res.status(404).json({ message: "Book not found" });
+    }
+
+    console.log("Sending book data:", book);
+    res.json({ book });
+  } catch (error) {
+    console.error("Server error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 // ✅ Новый: Лайк или дизлайк книги
 router.patch("/:id/like", protectRoute, async (req, res) => {
   try {
@@ -21,25 +42,6 @@ router.patch("/:id/like", protectRoute, async (req, res) => {
     }
     await book.save();
     res.json({ likes: book.likes });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
-
-// ✅ Новый: Сохранить или удалить из сохраненного
-router.patch("/:id/save", protectRoute, async (req, res) => {
-  try {
-    const book = await Book.findById(req.params.id);
-    if (!book) return res.status(404).json({ message: "Book not found" });
-
-    const saved = book.saves.includes(req.user._id);
-    if (saved) {
-      book.saves.pull(req.user._id);
-    } else {
-      book.saves.push(req.user._id);
-    }
-    await book.save();
-    res.json({ saves: book.saves });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
